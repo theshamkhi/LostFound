@@ -7,68 +7,102 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class PostController extends Controller
 {
+    // Display all posts
     public function index()
     {
-        $posts = Post::with('user', 'category')->latest()->paginate(10);
+        $posts = Post::with('user', 'category')->latest()->get();
         return view('posts.index', compact('posts'));
     }
 
+    // Show the form for creating a new post
     public function create()
     {
         $categories = Category::all();
         return view('posts.create', compact('categories'));
     }
 
+    // Store a newly created post
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'categoryID' => 'required|exists:categories,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'date' => 'required|date',
-            'location' => 'required',
-            'contact' => 'required',
+            'location' => 'required|string',
+            'contact' => 'required|string',
         ]);
 
-        $post = new Post($request->all());
+        $post = new Post();
         $post->userID = Auth::id();
+        $post->categoryID = $request->categoryID;
+        $post->title = $request->title;
+        $post->description = $request->description;
+        $post->date = $request->date;
+        $post->location = $request->location;
+        $post->contact = $request->contact;
+
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $post->photo = $photoPath;
+        }
+
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
 
+    // Display a specific post
     public function show(Post $post)
     {
+        $post->load('user', 'category', 'comments.user');
         return view('posts.show', compact('post'));
     }
 
+    // Show the form for editing a post
     public function edit(Post $post)
     {
         $categories = Category::all();
         return view('posts.edit', compact('post', 'categories'));
     }
 
+    // Update a post
     public function update(Request $request, Post $post)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'categoryID' => 'required|exists:categories,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'date' => 'required|date',
-            'location' => 'required',
-            'contact' => 'required',
+            'location' => 'required|string',
+            'contact' => 'required|string',
         ]);
 
-        $post->update($request->all());
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        $post->categoryID = $request->categoryID;
+        $post->title = $request->title;
+        $post->description = $request->description;
+        $post->date = $request->date;
+        $post->location = $request->location;
+        $post->contact = $request->contact;
+
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $post->photo = $photoPath;
+        }
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
     }
 
+    // Delete a post
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
     }
 }
