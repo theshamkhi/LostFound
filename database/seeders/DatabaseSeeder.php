@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Database\Seeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     public function run()
