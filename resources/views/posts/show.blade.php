@@ -1,32 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
     <h1>{{ $post->title }}</h1>
     <p>{{ $post->description }}</p>
-    <p>Category: {{ $post->category->name }}</p>
-    <p>Location: {{ $post->location }}</p>
-    <p>Contact: {{ $post->contact }}</p>
+    <p><strong>Location:</strong> {{ $post->location }}</p>
+    <p><strong>Date:</strong> {{ $post->date }}</p>
+    <p><strong>Contact:</strong> {{ $post->contact }}</p>
 
     <h2>Comments</h2>
-    <ul>
-        @foreach ($post->comments as $comment)
-            <li>
+    @foreach ($post->comments as $comment)
+        <div class="card mb-3">
+            <div class="card-body">
                 <p>{{ $comment->content }}</p>
-                <p>By: {{ $comment->user->name }}</p>
-                @if (auth()->id() === $comment->userID)
-                    <form action="{{ route('comments.destroy', $comment) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
-                    </form>
-                @endif
-            </li>
-        @endforeach
-    </ul>
+                <small>By {{ $comment->user->name }} on {{ $comment->created_at }}</small>
+            </div>
+        </div>
+    @endforeach
 
     <form action="{{ route('comments.store', $post) }}" method="POST">
         @csrf
-        <textarea name="content" required></textarea>
-        <button type="submit">Add Comment</button>
+        <div class="form-group">
+            <textarea name="content" class="form-control" rows="3" placeholder="Add a comment"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+</div>
 @endsection
