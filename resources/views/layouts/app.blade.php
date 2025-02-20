@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Lost & Found</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('posts.create') }}">Create Post</a>
-                        </li>
-                        <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-link nav-link">Logout</button>
-                            </form>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
-                        </li>
-                    @endauth
-                </ul>
-            </div>
+<body class="bg-gradient-to-br from-blue-50 to-purple-100 text-gray-900 min-h-screen flex flex-col">
+    <nav class="bg-white shadow-lg rounded-xl mx-6 my-4 p-4 flex justify-between items-center border border-gray-200">
+        <a href="{{ route('home') }}" class="text-3xl font-extrabold text-blue-700 tracking-wide flex items-center gap-2">
+            🔍 Lost & Found
+        </a>
+        <div>
+            <ul class="flex space-x-6 text-lg font-medium">
+                @auth
+                    <li>
+                        <a href="{{ route('posts.create') }}" class="text-gray-700 hover:text-blue-600 transition duration-300">➕ Create Post</a>
+                    </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="text-gray-700 hover:text-red-600 transition duration-300">🚪 Logout</button>
+                        </form>
+                    </li>
+                @else
+                    <li>
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 transition duration-300">🔑 Login</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('register') }}" class="text-gray-700 hover:text-blue-600 transition duration-300">📝 Register</a>
+                    </li>
+                @endauth
+            </ul>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        @yield('content')
-    </div>
+        <div class="mt-6">
+            @yield('content')
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="mt-auto py-6 text-center text-gray-500">
+        <p>&copy; {{ date('Y') }} Lost & Found. All rights reserved. 🏷️</p>
+    </footer>
 </body>
 </html>
