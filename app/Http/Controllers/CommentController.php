@@ -10,32 +10,24 @@ use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
-    // Store a new comment
     public function store(Request $request, Post $post)
     {
         $request->validate([
             'content' => 'required|string',
         ]);
 
-        // Debugging: Log the postID and content
-        Log::info('Creating comment for post:', [
-            'postID' => $post->id,
-            'content' => $request->content,
-        ]);
-
         $comment = new Comment();
-        $comment->userID = Auth::id(); // Set the authenticated user's ID
-        $comment->postID = $post->id;  // Set the postID from the route parameter
-        $comment->content = $request->content; // Set the comment content
-        $comment->save(); // Save the comment
+        $comment->userID = Auth::id();
+        $comment->postID = $post->id;
+        $comment->content = $request->content;
+        $comment->save();
 
-        return redirect()->route('posts.show', $post)->with('success', 'Comment added successfully!');
+        return redirect()->route('posts.show', $post);
     }
 
-    // Delete a comment
     public function destroy(Comment $comment)
     {
         $comment->delete();
-        return back()->with('success', 'Comment deleted successfully!');
+        return back();
     }
 }

@@ -9,21 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    // Display all posts
     public function index()
     {
         $posts = Post::with('user', 'category')->latest()->get();
         return view('posts.index', compact('posts'));
     }
 
-    // Show the form for creating a new post
     public function create()
     {
         $categories = Category::all();
         return view('posts.create', compact('categories'));
     }
 
-    // Store a newly created post
     public function store(Request $request)
     {
         $request->validate([
@@ -52,7 +49,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully!');
+        return redirect()->route('posts.index');
     }
 
     // Display a specific post
@@ -96,13 +93,13 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
+        return redirect()->route('posts.index');
     }
 
     // Delete a post
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
+        return redirect()->route('posts.index');
     }
 }
