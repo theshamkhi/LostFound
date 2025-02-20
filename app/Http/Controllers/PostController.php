@@ -11,9 +11,10 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user', 'category')->latest()->get();
+        $posts = Post::with('user', 'category')->latest()->paginate(9);
         return view('posts.index', compact('posts'));
     }
+    
 
     public function create()
     {
@@ -52,21 +53,18 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
-    // Display a specific post
     public function show(Post $post)
     {
         $post->load('user', 'category', 'comments.user');
         return view('posts.show', compact('post'));
     }
 
-    // Show the form for editing a post
     public function edit(Post $post)
     {
         $categories = Category::all();
         return view('posts.edit', compact('post', 'categories'));
     }
 
-    // Update a post
     public function update(Request $request, Post $post)
     {
         $request->validate([
@@ -96,7 +94,6 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
-    // Delete a post
     public function destroy(Post $post)
     {
         $post->delete();
