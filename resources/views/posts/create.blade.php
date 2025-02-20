@@ -22,7 +22,7 @@
             </select>
         </div>
         <div class="form-group mb-3">
-            <label for="photo">Photo (Optional)</label>
+            <label for="photo">Photo</label>
             <input type="file" name="photo" class="form-control">
         </div>
         <div class="form-group mb-3">

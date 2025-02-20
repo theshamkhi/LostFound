@@ -23,12 +23,12 @@
             </select>
         </div>
         <div class="form-group mb-3">
-            <label for="photo">Photo (Optional)</label>
+            <label for="photo">Photo</label>
             <input type="file" name="photo" class="form-control">
         </div>
         <div class="form-group mb-3">
             <label for="date">Date</label>
-            <input type="date" name="date" class="form-control" value="{{ $post->date->format('Y-m-d') }}" required>
+            <input type="date" name="date" class="form-control" value="{{ $post->date }}" required>
         </div>
         <div class="form-group mb-3">
             <label for="location">Location</label>
