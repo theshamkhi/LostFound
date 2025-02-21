@@ -7,12 +7,23 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
-{
-    public function index()
-    {
-        $posts = Post::with('user', 'category')->latest()->paginate(9);
-        return view('posts.index', compact('posts'));
+class PostController extends Controller {
+
+    public function index(Request $request){
+
+        $categoryID = $request->query('category');
+
+        $query = Post::with('user', 'category')->latest();
+
+        if ($categoryID) {
+            $query->where('categoryID', $categoryID);
+        }
+
+        $posts = $query->paginate(9);
+
+        $categories = Category::all();
+
+        return view('posts.index', compact('posts', 'categories'));
     }
     
 
