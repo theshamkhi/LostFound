@@ -2,17 +2,35 @@
 
 @section('content')
 <div class="container mx-auto px-6 py-12 bg-white shadow-xl rounded-xl max-w-5xl border border-gray-300">
-    <div class="flex justify-center mb-16">
-        <a href="{{ route('posts.create') }}" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg hover:scale-105 transition duration-300">
-            ➕ Create New Post
-        </a>
+    <!-- Category Filter Dropdown -->
+    <div class="mb-8 flex justify-end">
+        <form action="{{ route('posts.index') }}" method="GET">
+            <select name="category" onchange="this.form.submit()" class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">All Categories</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
     </div>
+
+    @auth
+        <div class="flex justify-center mb-16">
+            <a href="{{ route('posts.create') }}" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg hover:scale-105 transition duration-300">
+                ➕ Create New Post
+            </a>
+        </div>
+    @endauth
+
+    <!-- Posts Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
         @foreach ($posts as $post)
             <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 flex flex-col h-full">
                 @if ($post->photo)
                     <div class="relative">
-                        <img src="{{ asset('storage/app/public/photos/' . $post->photo) }}" class="w-full h-56 object-cover" alt="{{ $post->title }}">
+                        <img src="{{ asset('storage/' . $post->photo) }}" class="w-full h-56 object-cover" alt="{{ $post->title }}">
                     </div>
                 @else
                     <div class="w-full h-56 bg-gray-200 flex items-center justify-center">
@@ -22,7 +40,7 @@
                 <div class="p-6 flex flex-col flex-grow">
                     <h5 class="text-2xl font-bold text-gray-800">{{ $post->title }}</h5>
                     <p class="text-gray-600 mt-3 leading-relaxed">
-                        {{ Str::limit($post->description, 120) }}
+                        {{ $post->description }}
                     </p>
                     <span class="text-sm text-gray-500">
                         📅 Posted on {{ $post->created_at->format('M d, Y') }}
